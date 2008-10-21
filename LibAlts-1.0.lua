@@ -1,13 +1,13 @@
 ﻿--[[
 Name: LibAlts-1.0
-Revision: 2
+Revision: 3
 Author: Sylvanaar (sylvanaar@mindspring.com)
 Description: Shared handling of alt identity between addons.
 Dependencies: LibStub
 License: 
 ]]
 
-local MAJOR, MINOR = "LibAlts-1.0", "2"
+local MAJOR, MINOR = "LibAlts-1.0", "3"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -27,7 +27,7 @@ local function generateRevLookups()
 	end
 end
 
-function lib:Register(main, alt)
+function lib:SetAlt(main, alt)
 	Mains = nil
 	Alts[main] = Alts[main] or {}
 	tinsert(Alts[main], alt)
