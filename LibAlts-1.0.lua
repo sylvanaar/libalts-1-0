@@ -1,13 +1,13 @@
 ﻿--[[
 Name: LibAlts-1.0
-Revision: 4
+Revision: 5
 Author: Sylvanaar (sylvanaar@mindspring.com)
 Description: Shared handling of alt identity between addons.
 Dependencies: LibStub
 License: 
 ]]
 
-local MAJOR, MINOR = "LibAlts-1.0", "4"
+local MAJOR, MINOR = "LibAlts-1.0", "5"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
@@ -17,6 +17,8 @@ local Alts = {}
 local Mains = nil -- reverse lookup table
 local tinsert = _G.tinsert
 local unpack = _G.unpack
+
+local callbacks = LibStub("CallbackHandler-1.0"):New(lib)
 
 local function generateRevLookups()
 	Mains = {}
@@ -35,6 +37,8 @@ function lib:SetAlt(main, alt)
 
 	Alts[main] = Alts[main] or {}
 	tinsert(Alts[main], alt)
+
+	callbacks:Fire("LibAlts_SetAlt", main, alt)
 end
 
 function lib:GetAlts(main)
