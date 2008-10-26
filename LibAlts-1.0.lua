@@ -30,6 +30,7 @@ local function generateRevLookups()
 end
 
 function lib:SetAlt(main, alt)
+	if (not main) or (not alt) then return end
 	Mains = nil
 
 	main = main:lower()
@@ -42,6 +43,8 @@ function lib:SetAlt(main, alt)
 end
 
 function lib:GetAlts(main)
+	if not main then return end
+
 	main = main:lower()
 
 	if not Alts[main] or #Alts[main] == 0 then
@@ -52,6 +55,8 @@ function lib:GetAlts(main)
 end
 
 function lib:GetMain(alt)
+	if not alt then return end
+
 	alt = alt:lower()
 	if not Mains then
 		generateRevLookups()
@@ -61,11 +66,14 @@ function lib:GetMain(alt)
 end
 
 function lib:IsMain(main)
+	if not main then return end
 	return Alts[main:lower()] and true or false
 end
 
 function lib:IsAlt(alt)
-	if not Mains then
+	if not alt then return end
+	
+if not Mains then
 		generateRevLookups()
 	end
 
