@@ -29,6 +29,12 @@ local function generateRevLookups()
 	end
 end
 
+
+--- API for addons to register alts
+-- @name :SetAlt 
+-- @usage Register a Main<->Alt relationship 
+-- @param main Name of the main character
+-- @param alt Name of the alt character 
 function lib:SetAlt(main, alt)
 	if (not main) or (not alt) then return end
 	Mains = nil
@@ -42,6 +48,11 @@ function lib:SetAlt(main, alt)
 	callbacks:Fire("LibAlts_SetAlt", main, alt)
 end
 
+--- API for addons retrieve alts
+-- @name :GetAlt 
+-- @usage Get a list of alts for a given character 
+-- @param main Name of the main character
+-- @return  list list of alts 
 function lib:GetAlts(main)
 	if not main then return end
 
@@ -54,6 +65,11 @@ function lib:GetAlts(main)
 	return unpack(Alts[main])
 end
 
+--- API for addons to retrieve mains
+-- @name :IsMain 
+-- @usage Get main for a given alt character 
+-- @param alt Name of the alt character
+-- @return string the main character 
 function lib:GetMain(alt)
 	if not alt then return end
 
@@ -65,15 +81,26 @@ function lib:GetMain(alt)
 	return Mains[alt]
 end
 
+--- API for addons to test Main/Alt status
+-- @name :IsMain
+-- @usage Test if a character is a main
+-- @param main Name of the character
+-- @return boolean is this a main character
 function lib:IsMain(main)
 	if not main then return end
 	return Alts[main:lower()] and true or false
 end
 
+
+--- API for addons to test Main/Alt status
+-- @name :IsAlt
+-- @usage Test if a character is a alt
+-- @param alt Name of the character
+-- @return boolean is this a alt character
 function lib:IsAlt(alt)
 	if not alt then return end
 	
-if not Mains then
+    if not Mains then
 		generateRevLookups()
 	end
 
