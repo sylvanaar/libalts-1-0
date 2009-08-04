@@ -1,8 +1,8 @@
-## Interface: 30100
+## Interface: 30200
 
 ## Title: Lib: LibAlts-1.0
 ## Notes: Shared handling of alternate identity data between addons.
-## Version: 1.0
+## Version: @project-version@ 
 ## Author: Sylvanaar
 ## X-Category: Library
 
