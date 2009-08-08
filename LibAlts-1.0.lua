@@ -31,6 +31,7 @@ end
 
 
 --- Register a Main<->Alt relationship 
+-- @name :SetAlt 
 -- @param main Name of the main character
 -- @param alt Name of the alt character 
 function lib:SetAlt(main, alt)
