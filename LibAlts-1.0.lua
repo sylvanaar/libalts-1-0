@@ -7,16 +7,21 @@ Dependencies: LibStub
 License: 
 ]]
 
-local MAJOR, MINOR = "LibAlts-1.0", "5"
+local MAJOR, MINOR = "LibAlts-1.0", "6"
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
 local _G = getfenv(0)
 
-local Alts = {}
-local Mains = nil -- reverse lookup table
+lib.Alts = lib.Alts or {}
+
+local Alts = lib.Alts
+
+local Mains  -- reverse lookup table
+
 local tinsert = _G.tinsert
 local unpack = _G.unpack
+
 
 local callbacks = LibStub("CallbackHandler-1.0"):New(lib)
 
@@ -77,6 +82,19 @@ function lib:GetMain(alt)
 
 	return Mains[alt]
 end
+
+
+--- Get a list of all main characters
+-- @name :GetAllMains() 
+-- @return list of all main characters 
+function lib:GetAllMains()
+	if not Mains then
+		generateRevLookups()
+	end
+
+	return unpack(Mains)
+end
+
 
 --- Test if a character is a main
 -- @name :IsMain
