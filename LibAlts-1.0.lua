@@ -50,6 +50,11 @@ function lib:SetAlt(main, alt)
 	alt = alt:lower()
 
 	Alts[main] = Alts[main] or {}
+	for i,v in ipairs(Alts[main]) do
+	    if v == alt then
+	        return
+	    end
+	end
 	tinsert(Alts[main], alt)
 
 	callbacks:Fire("LibAlts_SetAlt", main, alt)
