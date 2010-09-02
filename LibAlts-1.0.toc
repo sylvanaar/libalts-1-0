@@ -1,4 +1,6 @@
 ## Interface: 30300
+## X-Compatible-With: 40000
+## X-Since-Interface: 30300
 
 ## Title: Lib: LibAlts-1.0
 ## Notes: Shared handling of alternate identity data between addons.
