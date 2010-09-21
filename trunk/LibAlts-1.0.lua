@@ -155,4 +155,4 @@ function lib:DeleteAlt(main, alt)
 		Alts[main] = nil
 	end
 	callbacks:Fire("LibAlts_RemoveAlt", main, alt)	--Alt is the one removed
-end
+end 
