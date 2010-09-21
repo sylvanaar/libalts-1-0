@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Name: LibAlts-1.0
 Revision: 5
 Author: Sylvanaar (sylvanaar@mindspring.com)
@@ -138,7 +138,7 @@ function lib:IsAlt(alt)
 	return Mains[alt:lower()] and true or false
 end
 
---- Remove an Main Alt relationship and fire a callback for the disassociation.
+--- Remove an Main<->Alt relationship and fire a callback for the disassociation.
 -- @name :DeleteAlt
 -- @param main Name of the Main character
 -- @param alt Name of the Alt being removed
