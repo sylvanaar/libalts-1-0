@@ -16,12 +16,16 @@ local _G = getfenv(0)
 
 lib.Alts = lib.Alts or {}
 lib.AltsPerSource = lib.AltsPerSource or {}
+lib.RealIds = lib.RealIds or {}
 
 local Alts = lib.Alts
 local AltsPerSource = lib.AltsPerSource
 
 local Mains  -- reverse lookup table
 local MainsPerSource = {} -- reverse lookup table
+
+local RealIds = lib.RealIds
+local RealIdMains = {} -- reverse lookup table
 
 local tinsert = _G.tinsert
 local unpack = _G.unpack
@@ -50,13 +54,14 @@ local function reverseTable(table)
 end
 
 --- Register a Main-Alt relationship.
+--  User-entered data should not have a source (i.e, source = nil).  For guild data, 
+--  prepend "guild:" to the guild name returned from the API.  Addons 
+--  wishing to add their own separate data should prepend "addon:".  Any data not 
+--  directly entered by a user should be added as a source.
 -- @name :SetAlt 
 -- @param main Name of the main character.
 -- @param alt Name of the alt character.
--- @param source Source of the main-alt relationship.  Nil if used-defined.  For guild
---    data, prepend "guild:" to the guild name returned from the API.  Addons wishing
---    to add their own separate data should prepend "addon:".  Any data not directly
---    entered by a user should be added as a source.
+-- @param source Source of the main-alt relationship.  Nil if used-defined.
 function lib:SetAlt(main, alt, source)
 	if (not main) or (not alt) then return end
 
@@ -390,4 +395,56 @@ function lib:RemoveSource(source)
         MainsPerSource[source] = nil
     end
 	callbacks:Fire("LibAlts_RemoveSource", source)
+end
+
+--- Get the main for a given Real Id.
+-- @name :GetMainForRealId 
+-- @param realid The Real Id.
+-- @return string The main character name, if a mapping exists.
+function lib:GetMainForRealId(realid)
+    if not realid then return nil end
+    
+    realid = realid:lower()
+    return RealIds[realid]
+end
+
+--- Get the main for a given alt character.
+-- @name :GetRealIdForMain 
+-- @param main Name of the main character.
+-- @return string The Real Id for the main, if a mapping exists.
+function lib:GetRealIdForMain(main)
+    if not main then return nil end
+
+    main = main:lower()
+    
+    return RealIdMains[main]
+end
+
+--- Register a Real Id-Main relationship.
+-- @name :SetRealIdForMain 
+-- @param realid The Real Id name.
+-- @param main Name of the main character.
+function lib:SetRealIdForMain(realid, main)
+    if not realid or #realid == 0 or not main or #main == 0 then return nil end
+    
+    main = main:lower()
+    realid = realid:lower()
+
+    -- Add the forward and reverse mappings
+    RealIds[realid] = main
+    RealIdMains[main] = realid
+
+    callbacks:Fire("LibAlts_SetRealIdForMain", realid, main)	
+end
+
+--- Test if a Real Id-Main relationship exists for a given Real Id.
+-- @name :IsRealId
+-- @param realid The Real Id name.
+-- @return boolean Does the Real Id-Main relationship exist.
+function lib:IsRealId(realid)
+    if not realid then return nil end
+    
+    realid = realid:lower()
+    
+    return RealIds[realid] and true or false
 end
