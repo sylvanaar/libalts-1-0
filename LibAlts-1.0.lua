@@ -411,6 +411,9 @@ end
 -- @param name The name to be converted.
 -- @return string The converted name.
 function lib:TitleCase(name)
+    if not name then return "" end
+    if #name == 0 then return "" end
+
     name = name:lower()
     return name:gsub(MULTIBYTE_FIRST_CHAR, string.upper, 1)
 end
