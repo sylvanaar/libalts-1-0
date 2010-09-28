@@ -39,6 +39,15 @@ local wipe = _G.wipe
 lib.callbacks = lib.callbacks or LibStub("CallbackHandler-1.0"):New(lib)
 local callbacks = lib.callbacks
 
+-- Regexp to match the first character for UTF8 strings
+local MULTIBYTE_FIRST_CHAR = "^([\192-\255]?%a?[\128-\191]*)"
+
+-- Constants for the source prefixes.  These should be prepended for guild or
+-- addon source names so they remain consistent.  The guild name itself should
+-- be the exact value from the Blizzard API.  Addons should use their exact name.
+lib.GUILD_PREFIX = "guild:"
+lib.ADDON_PREFIX = "addon:"
+
 local function reverseTable(table)
 	local reverse = {}
 	
@@ -65,8 +74,8 @@ end
 function lib:SetAlt(main, alt, source)
 	if (not main) or (not alt) then return end
 
-	main = main:lower()
-	alt = alt:lower()
+	main = self:TitleCase(main)
+	alt = self:TitleCase(alt)
     
     if not source then
         -- Adding the relationship to the user-defined data.
@@ -103,7 +112,7 @@ end
 function lib:GetAlts(main)
 	if not main then return nil end
 
-	main = main:lower()
+	main = self:TitleCase(main)
 	
 	local alts = {}
 
@@ -140,7 +149,7 @@ end
 function lib:GetAltsForSource(main, source)
 	if not main then return end
 
-	main = main:lower()
+	main = self:TitleCase(main)
 
 	if not source then
     	if Alts[main] and #Alts[main] > 0 then
@@ -163,7 +172,7 @@ end
 function lib:GetMain(alt)
 	if not alt then return end
 
-	alt = alt:lower()
+	alt = self:TitleCase(alt)
 
 	if not Mains then
 		Mains = reverseTable(Alts)
@@ -195,7 +204,7 @@ end
 function lib:GetMainForSource(alt, source)
 	if not alt then return nil end
 
-	alt = alt:lower()
+	alt = self:TitleCase(alt)
 
     if not source then
     	if not Mains then
@@ -266,7 +275,7 @@ end
 function lib:IsMain(main)
 	if not main then return nil end
 	
-	main = main:lower()
+	main = self:TitleCase(main)
 	
 	if Alts[main] then return true end
 	
@@ -285,7 +294,7 @@ end
 function lib:IsMainForSource(main, source)
 	if not main then return nil end
 	
-	main = main:lower()
+	main = self:TitleCase(main)
 	
 	if not source then
 	    return Alts[main] and true or false
@@ -302,7 +311,7 @@ end
 function lib:IsAlt(alt)
 	if not alt then return nil end
 	
-	alt = alt:lower()
+	alt = self:TitleCase(alts)
 	
     if not Mains then
 		Mains = reverseTable(Alts)
@@ -329,7 +338,7 @@ end
 function lib:IsAltForSource(alt, source)
 	if not alt then return nil end
 	
-	alt = alt:lower()
+	alt = self:TitleCase(alt)
 
 	if not source then
         if not Mains then
@@ -354,7 +363,7 @@ end
 -- @param alt Name of the Alt being removed.
 -- @param source Source of the main-alt relationship.  Nil if used-defined.
 function lib:DeleteAlt(main, alt, source)
-	main, alt = main:lower(), alt:lower()
+	main, alt = self:TitleCase(main), self:TitleCase(alt)
 
     if not source then
     	if not Alts[main] then return end
@@ -397,26 +406,33 @@ function lib:RemoveSource(source)
 	callbacks:Fire("LibAlts_RemoveSource", source)
 end
 
---- Get the main for a given Real Id.
+--- Returns a name formatted in title case (i.e., first character upper case, the rest lower).
+-- @name :TitleCase
+-- @param name The name to be converted.
+-- @return string The converted name.
+function lib:TitleCase(name)
+    name = name:lower()
+    return name:gsub(MULTIBYTE_FIRST_CHAR, string.upper, 1)
+end
+    
+--[[
+--- Get the main for a given Real Id name.
 -- @name :GetMainForRealId 
--- @param realid The Real Id.
+-- @param realid The Real Id name.
 -- @return string The main character name, if a mapping exists.
 function lib:GetMainForRealId(realid)
     if not realid then return nil end
-    
-    realid = realid:lower()
+    realid = self:TitleCase(realid)
     return RealIds[realid]
 end
 
---- Get the main for a given alt character.
+--- Get the Real ID name for a given main character.
 -- @name :GetRealIdForMain 
 -- @param main Name of the main character.
--- @return string The Real Id for the main, if a mapping exists.
+-- @return string The Real Id name for the main, if a mapping exists.
 function lib:GetRealIdForMain(main)
     if not main then return nil end
-
-    main = main:lower()
-    
+    main = self:TitleCase(main)
     return RealIdMains[main]
 end
 
@@ -425,10 +441,9 @@ end
 -- @param realid The Real Id name.
 -- @param main Name of the main character.
 function lib:SetRealIdForMain(realid, main)
-    if not realid or #realid == 0 or not main or #main == 0 then return nil end
-    
-    main = main:lower()
-    realid = realid:lower()
+    if not realid or or #realid == 0 or not main or #main == 0 then return nil end
+    main = self:TitleCase(main)
+    realid = self:TitleCase(realid)
 
     -- Add the forward and reverse mappings
     RealIds[realid] = main
@@ -437,14 +452,13 @@ function lib:SetRealIdForMain(realid, main)
     callbacks:Fire("LibAlts_SetRealIdForMain", realid, main)	
 end
 
---- Test if a Real Id-Main relationship exists for a given Real Id.
+--- Test if a Real Id-Main relationship exists for a given Real Id name.
 -- @name :IsRealId
 -- @param realid The Real Id name.
 -- @return boolean Does the Real Id-Main relationship exist.
 function lib:IsRealId(realid)
     if not realid then return nil end
-    
-    realid = realid:lower()
-    
+
     return RealIds[realid] and true or false
 end
+]]--
