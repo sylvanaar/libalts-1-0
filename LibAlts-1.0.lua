@@ -24,8 +24,8 @@ local AltsPerSource = lib.AltsPerSource
 local Mains  -- reverse lookup table
 local MainsPerSource = {} -- reverse lookup table
 
-local RealIds = lib.RealIds
-local RealIdMains = {} -- reverse lookup table
+--local RealIds = lib.RealIds
+--local RealIdMains = {} -- reverse lookup table
 
 local tinsert = _G.tinsert
 local unpack = _G.unpack
