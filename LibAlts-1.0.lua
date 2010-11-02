@@ -321,7 +321,7 @@ function lib:IsAlt(alt)
 
     for k, v in pairs(AltsPerSource) do
         if not MainsPerSource[k] then
-            MainsPerSource = reverseTable(AltsPerSource[k])
+            MainsPerSource[k] = reverseTable(AltsPerSource[k])
         end
         
         if MainsPerSource[k][alt] then return true end
@@ -350,7 +350,7 @@ function lib:IsAltForSource(alt, source)
         if not AltsPerSource[source] then return false end
 
         if not MainsPerSource[source] then
-            MainsPerSource = reverseTable(AltsPerSource[source])
+            MainsPerSource[source] = reverseTable(AltsPerSource[source])
         end
     
         return MainsPerSource[source][alt] and true or false
