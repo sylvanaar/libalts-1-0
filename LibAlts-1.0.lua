@@ -311,7 +311,7 @@ end
 function lib:IsAlt(alt)
 	if not alt then return nil end
 	
-	alt = self:TitleCase(alts)
+	alt = self:TitleCase(alt)
 	
     if not Mains then
 		Mains = reverseTable(Alts)
