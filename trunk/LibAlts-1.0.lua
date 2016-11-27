@@ -7,7 +7,7 @@ Dependencies: LibStub
 License: 
 ]]--
 
-local MAJOR, MINOR = "LibAlts-1.0", "@project-revision@"
+local MAJOR, MINOR = "LibAlts-1.0", 1
 local LibStub = LibStub
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
