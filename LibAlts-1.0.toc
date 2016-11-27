@@ -1,4 +1,4 @@
-## Interface: 40300
+## Interface: 70100
 ## X-Since-Interface: 30300
 
 ## Title: Lib: LibAlts-1.0
